@@ -1,0 +1,30 @@
+name: Crossref 2026 ISSN Automation
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  crossref:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Crossref script
+        run: python fetch_crossref_2026.py
+
+      - name: Upload CSV files
+        uses: actions/upload-artifact@v4
+        with:
+          name: crossref-2026-results
+          path: crossref_2026_part_*.csv
